@@ -51,7 +51,7 @@ add_custom_command(
 )
 
 add_executable(pscf 
-   ${BUILD_MACOSX_BUNDLE} WIN32
+   ${BUILD_MACOSX_BUNDLE}
    ${CMAKE_CURRENT_BINARY_DIR}/pscf_pd.f 
 )
 

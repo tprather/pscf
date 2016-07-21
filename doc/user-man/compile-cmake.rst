@@ -194,6 +194,97 @@ the cmake command. The required command is thus::
 
    > cmake -DUSE_INTEL=1 -DCMAKE_INSTALL_PREFIX=/path/to/install ../pscf
 
+Windows
+~~~~~~~
+
+Download and install the various PSCF build dependencies.
+
+MinGW
+^^^^^
+This is the "Minimalist GNU for Windows" software with the compiler, linker, and other
+core runtime libraries.
+
+Visit http:/www.mingw.org -> Downloads -> Installer and download mingw-get-setup.exe.
+Run it and use the "Basic Setup" panel to select and install
+
+   - mingw-developer-toolkit
+   - mingw32-base
+   - mingw32-gcc-fortran
+
+You do not need to add the MinGW bin directory to your Windows path if you do
+not want to.  It will only be needed to build the pscf software and a BAT file
+will be used for this which sets the path properly during the build steps.
+
+If you install it somewhere besides the default "C:\MinGW", you will need
+to edit the build-env.bat file below.
+
+
+Python
+^^^^^^
+Visit http://www.python.org/downloads/windows/ and follow the installation instructions.
+
+If you install it somewhere besides "C:\Program Files (x86)\Python27", you will need
+to edit the build-env.bat file below.
+
+CMake
+^^^^^
+Download cmake from http://cmake.org/download and follow the installation instructions.
+
+If you install it somewhere besides "C:\Program Files (x86)\CMake", you will need
+to edit the build-env.bat file below.
+
+Libraries
+^^^^^^^^^
+Each of the lapack, blas, and fftw3 libraries will have 2 components:
+
+  - A .lib file needed for building the pscf executable.
+  - A .dll file needed for executing the pscf executable.
+
+The next sections will have you create a pscf directory to hold the pscf source and decide on
+a location for the build results.  Rather than staging these libraries somewhere temporary,
+go ahead do the pscf directory creation (:ref:`obtaining_the_source_code`) and decide on
+your build result location (:ref:`choosing_an_install_directory`).
+
+In the pscf you've created, create a subdirectory called "libs" to hold the library .lib
+files.  Also, if the installation "bin" directory does not exist yet, create it.
+
+LAPACK/BLAS
+"""""""""""
+Download the lapack and blas libraries from http://icl.cs.utk.edu/lapack-for-windows/lapack
+-> "Prebuilt dynamic libraries using Mingw".
+
+  Web Page Link  Actual File Names  Download Desitination
+  =============  =================  =============================
+  Ref BLAS
+    win32.dll    libblas.dll        Installation "bin" directory.
+    win32.lib    libblas.lib        pscf/libs
+  LAPACK
+    win32.dll    liblapack.dll      Installation "bin" directory.
+    win32.lib    liblapack.lib      pscf/libs
+  =============  =================  =============================
+
+FFTW
+""""
+Download fftw library from http://www.fftw.org/install/windows.html fftw-3.3.4-dll32.zip and put
+
+  FFTW File       Download Destination
+  ==============  ============================
+  libfftw3-3.dll  Installation "bin" directory.
+  libfftw3-3.def  pscf/libs
+
+  The fftw3 library does not come with a .lib file, but you can create one from the .def
+  file using the Microsoft "lib" utility.  If you do not already have a version of
+  Microsoft Visual Studio installed, you can download the free "Express" version from
+  https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx.
+
+  Then, open a "Microsoft Visual Studio Command Window" and
+
+    cd <path_to_pscf>\pscf\libs
+    lib /def:libfftw3-3.def
+
+
+.. _obtaining-the-source-code:
+
 Obtaining the Source Code
 -------------------------
 We assume in what follows that you will use cmake to implement on 
@@ -258,6 +349,8 @@ At this point, by either method, you should have pscf/ directory structure::
 
 in which the cmake/ subdirectory is empty and the git/ subdirectory contains 
 the contents of github repository, including the source code.
+
+.. _choosing_an_install_directory:
 
 Choosing an Install Directory
 -----------------------------
@@ -334,6 +427,16 @@ is analogous to the structure of the /usr/local directory.
 
 Compiling and Installing
 ------------------------
+
+   Special Note for Windows Builds
+   """""""""""""""""""""""""""""""
+   The Windows build requires specific environment settings.  After
+   openning a command window for executing the commands below and
+   cd'ing to the pscf/cmake directory, first execute:
+
+     ..\git\tools\bin\build-env
+
+   to establish the proper environment settings.
 
 As the first step of compiling and installing, change directory to the 
 pscf/cmake/ directory. Then make sure the cmake/ directory is empty 
